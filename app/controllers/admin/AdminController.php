@@ -3,17 +3,29 @@
 namespace controllers\admin;
 
 use core\ResourceController;
+use core\Router;
+use core\View;
 
 class AdminController extends ResourceController
 {
 
-    #[\Override] public function index(): void
+    #[\Override] public function index()
     {
-        // TODO: Implement index() method.
-        echo 'AdminController@index';
+        $page = 'index';
+        $data = [];
+        $data['title'] = 'Адмін панель';
+        if (file_exists('install.php')) {
+            Router::redirect('/install.php');
+        }
+        $this->view->adminRender($page, $data);
     }
 
     #[\Override] public function create()
+    {
+        // TODO: Implement create() method.
+    }
+
+    public function rootcreate()
     {
         // TODO: Implement create() method.
     }
