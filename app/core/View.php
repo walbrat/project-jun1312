@@ -15,15 +15,25 @@ class View
         }
     }
 
-    public function render(string $page, array $data = [])
+    /**
+     * @param string $page
+     * @param array $data
+     * @return void
+     */
+    public function render(string $page, array $data = []): void
     {
         extract($data);
-        include_once TEMPLATES_FOLDER . $this->template . '.php';
+        include_once TEMPLATES_DIR . $this->template . '.php';
     }
 
-    public function adminRender(string $page, array $data = [])
+    /**
+     * @param string $page
+     * @param array $data
+     * @return void
+     */
+    public function adminRender(string $page, array $data = []): void
     {
         extract($data);
-        include_once TEMPLATES_FOLDER . $this->admin_template . '.php';
+        include_once TEMPLATES_DIR . $this->admin_template . '.php';
     }
 }

@@ -11,7 +11,7 @@ class Router
     /**
      * get action GET param and call same method in object of Main
      */
-    static public function init()
+    static public function init(): void
     {
         $route = $_SERVER['REQUEST_URI'];
         // Разбиваем строку по символу "/"
@@ -26,7 +26,7 @@ class Router
             $controllerName = trim($controllerName);
             $controllerName = strtolower($controllerName);
             $controllerName = ucfirst($controllerName);
-            $controllerName = '\controllers\admin\\'.$controllerName.'Controller';
+            $controllerName = '\controllers\admin\\' . $controllerName . 'Controller';
 
             $action = $routeArray[2] ?? self::DEFAULT_ACTION;
             $action = trim($action);
@@ -38,7 +38,7 @@ class Router
             $controllerName = trim($controllerName);
             $controllerName = strtolower($controllerName);
             $controllerName = ucfirst($controllerName);
-            $controllerName = '\controllers\\'.$controllerName.'Controller';
+            $controllerName = '\controllers\\' . $controllerName . 'Controller';
 
             $action = $routeArray[1] ?? self::DEFAULT_ACTION;
             $action = trim($action);
@@ -46,7 +46,7 @@ class Router
             $id = $routeArray[2] ?? null;
         }
 
-        if(!class_exists($controllerName)){
+        if (!class_exists($controllerName)) {
             self::notFound();
         }
         $controller = new $controllerName();
@@ -59,19 +59,31 @@ class Router
     /**
      * send status 404
      */
-    static public function notFound()
+    static public function notFound(): void
+
     {
         http_response_code(404);
         exit();
     }
 
-    static public function getUrl(string $controller = self::DEFAULT_CONTROLLER, string $page = self::DEFAULT_ACTION)
+    /**
+     * @param string $controller
+     * @param string $page
+     * @return string
+     */
+    static public function getUrl(string $controller = self::DEFAULT_CONTROLLER, string $page = self::DEFAULT_ACTION): string
     {
         return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/?controller=' . $controller . '&action=' . $page;
     }
 
-    static public function redirect(string $url = null){
-        if($url === null){
+
+    /**
+     * @param string|null $url
+     * @return void
+     */
+    static public function redirect(string $url = null): void
+    {
+        if ($url === null) {
             $url = $_SERVER['PHP_SELF'];
         }
         header("Location: {$url}");
