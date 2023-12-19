@@ -5,12 +5,20 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="../../../public/css/style.css">
+    <title><?php echo SITE_NAME; ?></title>
 </head>
 <body>
-<?php include_once PAGES_FOLDER . 'includes\header.php'; ?>
-<?php include_once PAGES_FOLDER . $page . '.php'; ?>
-<?php include_once PAGES_FOLDER . 'includes\footer.php'; ?>
-
+<div class="w3-container">
+    <header class="w3-container w3-teal">
+        <img class="logo" src="/../public/images/logo.svg" alt="">
+        <?php include_once PAGES_DIR . 'includes\header.php'; ?>
+        <h1><?php echo $title; ?></h1>
+    </header>
+    <?php include_once PAGES_DIR . $page . '.php'; ?>
+    <?php include_once PAGES_DIR . 'includes\footer.php'; ?>
+</div>
 </body>
 </html>

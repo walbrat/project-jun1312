@@ -9,3 +9,4 @@ const VIEWS_FOLDER = '..\app\view';
 const TEMPLATES_FOLDER = VIEWS_FOLDER. '\templates\\';
 const PAGES_FOLDER = VIEWS_FOLDER. '\pages\\';
 
+
