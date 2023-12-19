@@ -9,7 +9,6 @@ class View
     protected string $template = 'layout';
 
     public function __construct($template = null)
-
     {
         if ($template !== null) {
             $this->template = $template;
@@ -27,7 +26,6 @@ class View
     {
         $this->page = $page;
         extract($data);
-
         include_once $this->getTemplatePath();
     }
 
