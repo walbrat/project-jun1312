@@ -4,17 +4,16 @@ namespace core;
 
 class View
 {
-
-    public $page;
     protected string $template = 'layout';
+    protected string $admin_template = 'admin_layout';
 
-    public function __construct($template = null)
+    public function __construct($template = null, $admin_template = null)
     {
         if ($template !== null) {
             $this->template = $template;
+            $this->admin_template = $admin_template;
         }
     }
-
 
     /**
      * @param string $page
@@ -22,21 +21,19 @@ class View
      * @return void
      */
     public function render(string $page, array $data = []): void
-
     {
-        $this->page = $page;
         extract($data);
-        include_once $this->getTemplatePath();
+        include_once TEMPLATES_FOLDER . $this->template . '.php';
     }
 
-    private function getTemplatePath()
+    /**
+     * @param string $page
+     * @param array $data
+     * @return void
+     */
+    public function adminRender(string $page, array $data = []): void
     {
-        return TEMPLATES_DIR . DIRECTORY_SEPARATOR . "{$this->template}.php";
-
-    }
-
-    private function getPagePath()
-    {
-        return VIEW_DIR . PAGES_DIR . DIRECTORY_SEPARATOR . "{$this->page}.php";
+        extract($data);
+        include_once TEMPLATES_FOLDER . $this->admin_template . '.php';
     }
 }
