@@ -3,26 +3,20 @@
 namespace controllers\admin;
 
 use core\ResourceController;
-use core\Router;
 
-class AdminController extends ResourceController
+class PageController extends ResourceController
 {
 
-
-    /**
-     * @inheritDoc
-     */
     public function index(): void
     {
-        $this->data['title'] = 'Адмін панель';
-        if (file_exists('install.php')) {
-            Router::redirect('/install.php');
-        }
-        $this->view->adminRender('index', $this->data);
+        $this->data['title'] = 'Головна сторінка';
+        $this->data['button_name'] = 'Головна';
+        $this->data['content'] = 'Тут буде текст з бази';
+        $this->view->render('index', $data);
     }
 
     /**
-     * @inheritDoc
+     * @return void
      */
     public function create(): void
     {
@@ -30,7 +24,8 @@ class AdminController extends ResourceController
     }
 
     /**
-     * @inheritDoc
+     * @param int $id
+     * @return void
      */
     public function show(int $id): void
     {
@@ -38,7 +33,8 @@ class AdminController extends ResourceController
     }
 
     /**
-     * @inheritDoc
+     * @param int $id
+     * @return void
      */
     public function update(int $id): void
     {
@@ -46,7 +42,8 @@ class AdminController extends ResourceController
     }
 
     /**
-     * @inheritDoc
+     * @param int $id
+     * @return void
      */
     public function destroy(int $id): void
     {

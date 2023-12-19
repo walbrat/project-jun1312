@@ -1,16 +1,12 @@
-<div class="bg-image">
-    <div class="nav"><a href="/">Main</a>
+<div class="w3-bar w3-black">
 
-        <ul class="header-list">
-            <li class="header-list-item"><a href="/" class="header_name">Home</a></li>
-            <li class="header-list-item"><a href="/page/index" class="header_name">Pages</a></li>
-            <li class="header-list-item"><a href="/admin/admin/index" class="header_name">Users</a></li>
-        </ul>
+    <a class="w3-bar-item w3-button" href="/" class="header_name">Home</a>
+    <a class="w3-bar-item w3-button" href="/page/index" class="header_name">Pages</a>
+    <a class="w3-bar-item w3-button" href="/admin/" class="header_name">Users</a>
 
-        <ul class="auth-list">
-            <li class="auth-list-item"><a href="/auth/login" class="header_name">Login</a></li>
-            <li class="auth-list-item"><a href="/auth/signup" class="header_name">Register</a></li>
-        </ul>
 
-    </div>
+    <a class="w3-bar-item w3-button w3-right" href="/auth/login" class="header_name">Login</a>
+    <a class="w3-bar-item w3-button w3-right" href="/auth/signup" class="header_name">Register</a>
+
+
 </div>

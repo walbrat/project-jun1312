@@ -4,23 +4,53 @@ namespace core;
 
 abstract class ResourceController
 {
+    /**
+     * @var array
+     */
+    public array $data = [];
+    /**
+     * @var array|string[]
+     */
+    public array $meta = ['title' => '', 'description' => ''];
+    /**
+     * @var string
+     */
+    public string $layout = '';
+    /**
+     * @var BaseModel
+     */
     protected BaseModel $model;
+    /**
+     * @var View
+     */
     protected View $view;
 
-    public function __construct()
-    {
-        $this->model = new BaseModel();
-        $this->view = new View();
-    }
 
+    /**
+     * @return void
+     */
+    abstract public function index(): void;
 
-    abstract public function index();
+    /**
+     * @return void
+     */
+    abstract public function create(): void;
 
-    abstract public function create();
+    /**
+     * @param int $id
+     * @return void
+     */
+    abstract public function show(int $id): void;
 
-    abstract public function show(int $id);
+    /**
+     * @param int $id
+     * @return void
+     */
+    abstract public function update(int $id): void;
 
-    abstract public function update(int $id);
-
-    abstract public function destroy(int $id);
+    /**
+     * @param int $id
+     * @return void
+     */
+    abstract public function destroy(int $id): void;
 }

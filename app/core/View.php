@@ -5,32 +5,35 @@ namespace core;
 class View
 {
     protected string $template = 'layout';
-    public $page;
-    const VIEW_DIR = VIEWS_FOLDER;
-    const TEMPLATE_DIR = TEMPLATES_FOLDER;
-    const PAGE_DIR = PAGES_FOLDER;
-    
-    public function __construct($template = null)
+    protected string $admin_template = 'admin_layout';
+
+    public function __construct($template = null, $admin_template = null)
     {
         if ($template !== null) {
             $this->template = $template;
+            $this->admin_template = $admin_template;
         }
     }
-    
-    public function render(string $page, array $data = [])
+
+    /**
+     * @param string $page
+     * @param array $data
+     * @return void
+     */
+    public function render(string $page, array $data = []): void
     {
-        $this->page = $page;
         extract($data);
-        include_once $this->getTemplatePath();
+        include_once TEMPLATES_DIR . $this->template . '.php';
     }
-    
-    private function getPagePath()
+
+    /**
+     * @param string $page
+     * @param array $data
+     * @return void
+     */
+    public function adminRender(string $page, array $data = []): void
     {
-        return self::VIEW_DIR . self::PAGE_DIR . DIRECTORY_SEPARATOR . "{$this->page}.php";
-    }
-    
-    private function getTemplatePath()
-    {
-        return self::TEMPLATE_DIR . DIRECTORY_SEPARATOR . "{$this->template}.php";
+        extract($data);
+        include_once TEMPLATES_DIR . $this->admin_template . '.php';
     }
 }
