@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -22,3 +23,4 @@
 </div>
 </body>
 </html>
+>>>>>>>>> Temporary merge branch 2
