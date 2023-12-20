@@ -7,4 +7,3 @@ const LOGO_IMAGE='';
 const FOOTER_TEXT='';
 
 
-
