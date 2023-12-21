@@ -43,14 +43,12 @@ abstract class ResourceController
     abstract public function show(int $id): void;
 
     /**
-     * @param int $id
      * @return void
      */
-    abstract public function update(int $id): void;
+    abstract public function update(): void;
 
     /**
-     * @param int $id
      * @return void
      */
-    abstract public function destroy(int $id): void;
+    abstract public function destroy(): void;
 }

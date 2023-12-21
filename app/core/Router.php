@@ -13,20 +13,19 @@ class Router
      */
     static public function init(): void
     {
-        $route = $_SERVER['REQUEST_URI'];
+        $route = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'];
         // Разбиваем строку по символу "/"
         $routeArray = explode('/', $route);
         // Фильтруем пустые элементы массива
         $routeArray = array_filter($routeArray);
         // Преобразуем индексы массива в числа (если нужно)
         $routeArray = array_values($routeArray);
-
         if (isset($routeArray[0]) && $routeArray[0] == 'admin') {
             $controllerName = $routeArray[1] ?? self::DEFAULT_ADMIN_CONTROLLER;
             $controllerName = trim($controllerName);
             $controllerName = strtolower($controllerName);
             $controllerName = ucfirst($controllerName);
-            $controllerName = '\controllers\admin\\' . $controllerName . 'Controller';
+            $controllerName = DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . $controllerName . 'Controller';
 
             $action = $routeArray[2] ?? self::DEFAULT_ACTION;
             $action = trim($action);
@@ -71,9 +70,12 @@ class Router
      * @param string $page
      * @return string
      */
-    static public function getUrl(string $controller = self::DEFAULT_CONTROLLER, string $page = self::DEFAULT_ACTION): string
+    static public function getUrl(string $controller = self::DEFAULT_CONTROLLER, string $page = self::DEFAULT_ACTION, bool $isAdmin = false): string
     {
-        return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/?controller=' . $controller . '&action=' . $page;
+        if($isAdmin){
+            return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/admin/' . $controller . '/' . $page;
+        }
+        return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $controller . '/' . $page;
     }
 
 
