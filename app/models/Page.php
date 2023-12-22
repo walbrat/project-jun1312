@@ -27,10 +27,10 @@ class Page extends BaseModel
     /**
      * @return array|mixed
      */
-    public function getPages()
+    public  function getPages()
     {
         $sql = "select * from pages;";
-        $result = $this->db->query($sql);
+        $result = $this->db->query ($sql);
         $pages = $result->fetch_all(MYSQLI_ASSOC);
         if ($pages) {
             return $pages;
