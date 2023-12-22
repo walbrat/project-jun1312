@@ -29,7 +29,23 @@ class PageController extends ResourceController
      */
     public function create(): void
     {
-        // TODO: Implement create() method.
+        $title = filter_input(INPUT_POST, 'title');
+        $content = filter_input(INPUT_POST, 'content');
+        $slug = filter_input(INPUT_POST, 'slug');
+        $page = [
+            'title'=> $title,
+            'content'=>$content,
+            'slug'=>$slug
+        ];
+    
+        $result = $this->model->addPage($page);
+        if($result){
+            $url = Router::getUrl('page', 'index', true);
+            Router::redirect($url);
+        }else{
+            $url = Router::getUrl('page', 'error', true);
+            Router::redirect($url);
+        }
     }
 
     /**
@@ -93,6 +109,11 @@ class PageController extends ResourceController
         if($idPage){
             $result = $this->model->getPage($idPage);
             $result['actionForForm'] = Router::getUrl('page', 'update',true);
+            $result['buttonText'] = 'Edit';
+            $this->view->adminRender('form', $result);
+        }else{
+            $result['actionForForm'] = Router::getUrl('page', 'create',true);
+            $result['buttonText'] = 'Create';
             $this->view->adminRender('form', $result);
         }
     }
