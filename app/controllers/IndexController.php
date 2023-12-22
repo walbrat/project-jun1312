@@ -5,6 +5,7 @@ namespace controllers;
 use core\BaseController;
 use core\BaseModel;
 use core\View;
+use models\Page;
 
 class IndexController extends BaseController
 {
@@ -16,13 +17,19 @@ class IndexController extends BaseController
     }
 
     /**
-     * @return void
+     * @param int|null $id
      */
-    public function index(): void
+    public function index(int $id=null): void
     {
-        $this->data['title'] = 'Головна сторінка';
-        $this->data['button_name'] = 'Головна';
-        $this->data['content'] = 'Тут буде текст з бази';
+
+        $page=new Page();
+        $pages=$page->getPages();
+        foreach ($pages as $page){
+            if ($page['id']==$id ){
+                $this->data['title'] = $page['content'];
+            }
+        }
+        $this->data['content'] = $pages;
         $this->view->render('index', $this->data);
     }
 }
