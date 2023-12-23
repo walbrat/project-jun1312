@@ -2,6 +2,9 @@
 
 namespace core;
 
+use core\View;
+use core\BaseModel;
+
 abstract class ResourceController
 {
     /**
@@ -17,14 +20,18 @@ abstract class ResourceController
      */
     public string $layout = '';
     /**
-     * @var BaseModel
+     * @var \core\BaseModel
      */
-    protected BaseModel $model;
+    protected $model;
     /**
-     * @var View
+     * @var \core\View
      */
-    protected View $view;
+    protected $view;
 
+    public function __construct() {
+        $this->view = new View();
+        $this->model = new BaseModel();
+    }
 
     /**
      * @return void
@@ -40,7 +47,7 @@ abstract class ResourceController
      * @param int $id
      * @return void
      */
-    abstract public function show(int $id): void;
+    abstract public function show(): void;
 
     /**
      * @return void
