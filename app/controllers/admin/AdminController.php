@@ -4,10 +4,20 @@ namespace controllers\admin;
 
 use core\ResourceController;
 use core\Router;
+use core\View;
+use models\Auth;
 
 class AdminController extends ResourceController
 {
 
+
+    public string $layout = 'admin_layout';
+
+    public function __construct()
+    {
+        $this->model = new Auth();
+        $this->view = new View($this->layout);
+    }
 
     /**
      * @inheritDoc
@@ -15,10 +25,11 @@ class AdminController extends ResourceController
     public function index(): void
     {
         $this->data['title'] = 'Адмін панель';
-        if (file_exists('install.php')) {
-            Router::redirect('/install.php');
-        }
-        $this->view->adminRender('index', $this->data);
+//        if (file_exists('install.php')) {
+//            Router::redirect('admin/admin/index');
+//        }
+//        var_dump($this->view);
+        $this->view->render('index', $this->data);
     }
 
     /**

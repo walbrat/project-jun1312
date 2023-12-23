@@ -9,6 +9,12 @@ use core\View;
 class IndexController extends BaseController
 {
 
+    public function __construct()
+    {
+        $this->model = new BaseModel();
+        $this->view = new View();
+    }
+
     /**
      * @return void
      */

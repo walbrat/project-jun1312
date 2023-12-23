@@ -20,10 +20,10 @@ class BaseController
     /**
      * @var BaseModel
      */
-    protected BaseModel $model;
+    protected  $model;
     /**
      * @var View
      */
-    protected View $view;
+    protected  $view;
 
 }

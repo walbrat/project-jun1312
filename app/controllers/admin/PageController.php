@@ -12,7 +12,7 @@ class PageController extends ResourceController
         $this->data['title'] = 'Головна сторінка';
         $this->data['button_name'] = 'Головна';
         $this->data['content'] = 'Тут буде текст з бази';
-        $this->view->render('index', $data);
+        $this->view->render('index', $this->data);
     }
 
     /**

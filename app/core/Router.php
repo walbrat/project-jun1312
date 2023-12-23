@@ -28,7 +28,7 @@ class Router
             $controllerName = ucfirst($controllerName);
             $controllerName = '\controllers\admin\\' . $controllerName . 'Controller';
 
-            $action = $routeArray[2] ?? self::DEFAULT_ACTION;
+            $action = $routeArray[2] ?: self::DEFAULT_ACTION;
             $action = trim($action);
             $action = strtolower($action);
             $id = $routeArray[3] ?? null;
@@ -67,6 +67,20 @@ class Router
     }
 
     /**
+     * @param string|null $url
+     * @return void
+     */
+    static public function redirect(string $url = null): void
+    {
+        $url = self::getUrl($url);
+        if ($url === null) {
+            $url = $_SERVER['PHP_SELF'];
+        }
+        header("Location: {$url}");
+        exit();
+    }
+
+    /**
      * @param string $controller
      * @param string $page
      * @return string
@@ -74,20 +88,6 @@ class Router
     static public function getUrl(string $controller = self::DEFAULT_CONTROLLER, string $page = self::DEFAULT_ACTION): string
     {
         return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/?controller=' . $controller . '&action=' . $page;
-    }
-
-
-    /**
-     * @param string|null $url
-     * @return void
-     */
-    static public function redirect(string $url = null): void
-    {
-        if ($url === null) {
-            $url = $_SERVER['PHP_SELF'];
-        }
-        header("Location: {$url}");
-        exit();
     }
 
 }
