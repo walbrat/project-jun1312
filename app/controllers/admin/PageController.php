@@ -2,12 +2,12 @@
 
 namespace controllers\admin;
 
-use core\ResourceController;
+use core\BaseController;
 use core\Router;
 use core\View;
 use models\Page;
 
-class PageController extends ResourceController
+class PageController extends BaseController
 {
     public function __construct()
     {
@@ -52,7 +52,7 @@ class PageController extends ResourceController
      * @param int $id
      * @return void
      */
-    public function show(int $id): void
+    public function show(): void
     {
         // TODO: Implement show() method.
     }
@@ -88,7 +88,7 @@ class PageController extends ResourceController
      */
     public function destroy(): void
     {
-        $idPage = filter_input(INPUT_GET, 'idPage', FILTER_VALIDATE_INT);
+        $idPage = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
         $result = $this->model->delPage($idPage);
         if($result){
             $url = Router::getUrl('page', 'index', true);
