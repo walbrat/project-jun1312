@@ -2,65 +2,52 @@
 
 namespace controllers\admin;
 
-use core\ResourceController;
+use core\BaseController;
 use core\Router;
 use core\View;
-use models\Auth;
+use models\User;
 
-class AdminController extends ResourceController
+
+class AdminController extends BaseController
 {
-
-
-    public string $layout = 'admin_layout';
-
-    public function __construct()
-    {
-        $this->model = new Auth();
-        $this->view = new View($this->layout);
-    }
-
     /**
-     * @inheritDoc
+     * @return void
      */
     public function index(): void
     {
+        $page = 'index';
         $this->data['title'] = 'Адмін панель';
-//        if (file_exists('install.php')) {
-//            Router::redirect('admin/admin/index');
-//        }
-//        var_dump($this->view);
-        $this->view->render('index', $this->data);
+        $this->checkRootUser();
+        $this->view->adminRender($page, $this->data);
     }
 
     /**
-     * @inheritDoc
+     * Цей метод перевіряє існування файла install.php, та чи є в базі даних користувачі.
+     * @return mixed
      */
-    public function create(): void
+    public function checkRootUser(): mixed
     {
-        // TODO: Implement create() method.
-    }
+        $page = 'install';
+        $installFile = ADMIN_PAGES_FOLDER . $page . '.php';
+        $users = new User();
+        $allUsers = $users->getUsers();
 
-    /**
-     * @inheritDoc
-     */
-    public function show(int $id): void
-    {
-        // TODO: Implement show() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function update(int $id): void
-    {
-        // TODO: Implement update() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function destroy(int $id): void
-    {
-        // TODO: Implement destroy() method.
+        if (file_exists($installFile) && empty($allUsers)) {
+            $url = Router::getUrl('install', 'index');
+            Router::redirect($url);
+        } else if (!empty($allUsers)) {
+            $installTemplateFile = TEMPLATES_ADMIN_FOLDER . $page . '_template.php';
+            $installControllerFile =  __DIR__ . DIRECTORY_SEPARATOR . ucfirst($page) . 'Controller.php';
+            if (file_exists($installFile)) {
+                unlink($installFile);
+            }
+            if (file_exists($installTemplateFile)) {
+                unlink($installTemplateFile);
+            }
+            if (file_exists($installControllerFile)) {
+                unlink($installControllerFile);
+            }
+        }
+        return false;
     }
 }

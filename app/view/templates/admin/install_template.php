@@ -14,10 +14,9 @@
     <div class="w3-container">
         <header class="w3-container w3-teal">
             <img class="logo" src="/public/images/logo.svg" alt="">
-            <?php include_once PAGES_FOLDER . 'includes\header.php'; ?>
             <h1><?php echo $title; ?></h1>
         </header>
-        <?php include_once PAGES_FOLDER . $page . '.php'; ?>
+        <?php include_once ADMIN_PAGES_FOLDER . $page . '.php'; ?>
         <?php include_once PAGES_FOLDER . 'includes\footer.php'; ?>
     </div>
     </body>

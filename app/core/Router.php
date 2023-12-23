@@ -9,42 +9,13 @@ class Router
     const DEFAULT_ADMIN_CONTROLLER = 'Admin';
 
     /**
-     * get action GET param and call same method in object of Main
+     * @return void
      */
     static public function init(): void
     {
-        $route = $_SERVER['REQUEST_URI'];
-        // Разбиваем строку по символу "/"
-        $routeArray = explode('/', $route);
-        // Фильтруем пустые элементы массива
-        $routeArray = array_filter($routeArray);
-        // Преобразуем индексы массива в числа (если нужно)
-        $routeArray = array_values($routeArray);
-
-        if (isset($routeArray[0]) && $routeArray[0] == 'admin') {
-            $controllerName = $routeArray[1] ?? self::DEFAULT_ADMIN_CONTROLLER;
-            $controllerName = trim($controllerName);
-            $controllerName = strtolower($controllerName);
-            $controllerName = ucfirst($controllerName);
-            $controllerName = '\controllers\admin\\' . $controllerName . 'Controller';
-
-            $action = $routeArray[2] ?: self::DEFAULT_ACTION;
-            $action = trim($action);
-            $action = strtolower($action);
-            $id = $routeArray[3] ?? null;
-
-        } else {
-            $controllerName = $routeArray[0] ?? self::DEFAULT_CONTROLLER;
-            $controllerName = trim($controllerName);
-            $controllerName = strtolower($controllerName);
-            $controllerName = ucfirst($controllerName);
-            $controllerName = '\controllers\\' . $controllerName . 'Controller';
-
-            $action = $routeArray[1] ?? self::DEFAULT_ACTION;
-            $action = trim($action);
-            $action = strtolower($action);
-            $id = $routeArray[2] ?? null;
-        }
+        $getUri = self::getUri();
+        $controllerName = $getUri['controller_name'];
+        $action = $getUri['action_name'];
 
         if (!class_exists($controllerName)) {
             self::notFound();
@@ -53,17 +24,80 @@ class Router
         if (!method_exists($controller, $action)) {
             self::notFound();
         }
-        $controller->$action($id);
+        $controller->$action();
+    }
+
+    /**
+     * @return array
+     */
+    static public function getUri() :array
+    {
+        $route = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'];
+        // Разбиваем строку по символу "/"
+        $routeArray = explode('/', $route);
+        // Фильтруем пустые элементы массива
+        $routeArray = array_filter($routeArray);
+        // Преобразуем индексы массива в числа (если нужно)
+        $routeArray = array_values($routeArray);
+        if (isset($routeArray[0]) && self::isAdminDashboard($routeArray[0]))
+        {
+            $controllerName = $routeArray[1] ?? self::DEFAULT_ADMIN_CONTROLLER;
+            $return['route_controller'] = $routeArray[0];
+            $controllerName = trim($controllerName);
+            $controllerName = strtolower($controllerName);
+            $controllerName = ucfirst($controllerName);
+            $controllerName = '\controllers\admin\\' . $controllerName . 'Controller';
+            $action = $routeArray[2] ?? self::DEFAULT_ACTION;
+            $action = trim($action);
+            $action = strtolower($action);
+        } else {
+            $controllerName = $routeArray[0] ?? self::DEFAULT_CONTROLLER;
+            $return['route_controller'] = $controllerName;
+            $controllerName = trim($controllerName);
+            $controllerName = strtolower($controllerName);
+            $controllerName = ucfirst($controllerName);
+            $controllerName = '\controllers\\' . $controllerName . 'Controller';
+            $action = $routeArray[1] ?? self::DEFAULT_ACTION;
+            $action = trim($action);
+            $action = strtolower($action);
+        }
+        $return['controller_name'] = $controllerName;
+        $return['action_name'] = $action;
+        return $return;
     }
 
     /**
      * send status 404
      */
     static public function notFound(): void
-
     {
         http_response_code(404);
         exit();
+    }
+
+    /**
+     * метод автоматично директорію /dashboard/ при виклику із класів адмін панелі
+     * параметри передавати у форматі id=2
+     * загальний синтаксис
+     * $url = getUrl('user', 'show', 'id=1');
+     * $this->data['url'] = $url;
+     * використовується для створення посилань у Контролерах, та вікористання у View при читанны змынної $url
+     * @param string $controller
+     * @param string $action
+     * @param string|null $params
+     * @return string
+     */
+    static public function getUrl(string $controller, string $action, string $params=null) : string
+    {
+        if ($params) {
+            $params = "?{$params}";
+        }
+        $getUri = self::getUri();
+        $isAdmin = self::isAdminDashboard($getUri['route_controller']);
+        if($isAdmin){
+            return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/dashboard/' . $controller . '/' . $action . $params;
+        }
+        return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $controller . '/' . $action . $params;
     }
 
     /**
@@ -72,22 +106,22 @@ class Router
      */
     static public function redirect(string $url = null): void
     {
-        $url = self::getUrl($url);
         if ($url === null) {
             $url = $_SERVER['PHP_SELF'];
         }
-        header("Location: {$url}");
+       header("Location: {$url}");
         exit();
     }
 
     /**
-     * @param string $controller
-     * @param string $page
-     * @return string
+     * @return bool
      */
-    static public function getUrl(string $controller = self::DEFAULT_CONTROLLER, string $page = self::DEFAULT_ACTION): string
+    static public function isAdminDashboard(string $data) : bool
     {
-        return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/?controller=' . $controller . '&action=' . $page;
+        if ($data == 'dashboard') {
+            return true;
+        }
+        return false;
     }
 
 }

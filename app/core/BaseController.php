@@ -2,6 +2,7 @@
 
 namespace core;
 
+use core\View;
 class BaseController
 {
 
@@ -25,5 +26,10 @@ class BaseController
      * @var View
      */
     protected  $view;
+
+    public function __construct() {
+        $this->view = new View();
+        $this->model = new BaseModel();
+    }
 
 }
