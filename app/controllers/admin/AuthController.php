@@ -1,6 +1,6 @@
 <?php
 
-namespace controllers;
+namespace controllers\admin;
 
 use core\BaseController;
 use core\BaseModel;
