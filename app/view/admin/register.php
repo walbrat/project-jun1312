@@ -1,11 +1,7 @@
-<?php
-var_dump($_SESSION);
-?>
-
 <div class="w3-container">
     <div class="w3-card-4 autch">
         <div class="w3-container w3-amber">
-            <h2>Register root user now</h2>
+            <h2>Регистрация нового пользователя</h2>
         </div>
         <form name="registration_form" class="w3-container" action="checkRegister" method="post">
             <p>

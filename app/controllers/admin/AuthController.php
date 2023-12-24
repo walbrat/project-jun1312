@@ -3,75 +3,84 @@
 namespace controllers\admin;
 
 use core\BaseController;
-use core\BaseModel;
 use core\Router;
 use core\View;
 use helpers\Session;
 use helpers\Validator;
+use models\Auth;
 
 class AuthController extends BaseController
 {
-    public string $layout = 'admin_layout';
+    /**
+     * @var string
+     */
+    public string $layout = 'layout';
 
     public function __construct()
     {
-        $this->model = new BaseModel();
+        parent::__construct();
         $this->view = new View($this->layout);
+        $this->model = new Auth();
     }
 
     /**
      * @return void
      */
-    public function index(): void
-    {
-        $this->view->render('auth');
-    }
-
-    public function login()
+    public function login(): void
     {
 
-        $this->view->render('login', [
+        $this->view->adminRender('login', [
             'login' => Session::getValue('login'),
             'errors' => Session::getErrors(),
         ]);
     }
 
-    public function checkLogin()
+    /**
+     * @return void
+     */
+    public function checkLogin(): void
     {
         $login = filter_input(INPUT_POST, 'login');
         $password = filter_input(INPUT_POST, 'password');
-        $password_hash = password_hash($password, PASSWORD_BCRYPT);
-
-        Validator::checkListInput([$login, $password]);
+//        var_dump($login, $password);
+        $is_valid = Validator::checkListInput([$login, $password]);
+        if (!$is_valid) {
+            Router::redirect('login');
+        }
         $user = $this->model->getUserByLogin($login);
         $realPass = password_verify($password, $user['password']);
-        var_dump($login, $password_hash, $user, $realPass);
 
         if ($realPass) {
-            echo 'ok';
-            $this->view->render('page');
             Session::setValue('login', $login);
+            $this->view->adminRender('dashboard', [
+                'login' => $login,
+            ]);
         } else {
-            echo 'no';
             Session::delFromSession('errors');
             $errors[] = 'incorrect login or password!';
             Session::setErrors($errors);
             Session::setValue('login', $login);
-            $this->view->render('login');
+            Router::redirect('login');
         }
 
     }
 
-    public function register()
+    /**
+     * @return void
+     */
+    public function register(): void
     {
-        $this->view->render('register', [
+        $this->view->adminRender('register', [
             'login' => Session::getValue('login'),
             'email' => Session::getValue('email'),
             'errors' => Session::getErrors(),
         ]);
     }
 
-    public function checkRegister()
+    /**
+     * @return void
+     */
+    public function checkRegister(): void
     {
         $login = filter_input(INPUT_POST, 'login');
         $email = filter_input(INPUT_POST, 'email');
@@ -79,21 +88,26 @@ class AuthController extends BaseController
         $conf_password = filter_input(INPUT_POST, 'password_confirm');
         Validator::checkListInput([$login, $email, $password]);
         if (!Validator::equalPass($password, $conf_password)) {
-            $this->view->render('register');
+            Router::redirect('register');
         }
         $hash_pass = password_hash($password, PASSWORD_BCRYPT);
-        session_start();
+
         if (!empty($_SESSION['errors'])) {
             Session::setValue('login', $login);
             Session::setValue('email', $email);
+            Router::redirect('register');
 
         } else {
             $this->model->addUser($login, $hash_pass, $email);
             Session::delFromSession();
+            Router::redirect('');
         }
     }
 
-    public function logout()
+    /**
+     * @return void
+     */
+    public function logout(): void
     {
         session_start();
         session_destroy();
