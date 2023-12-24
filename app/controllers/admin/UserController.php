@@ -39,4 +39,5 @@ class UserController extends BaseController
     {
         Router::redirect('/');
     }
+
 }

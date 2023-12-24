@@ -40,8 +40,8 @@ class Page extends BaseModel
     {
         $pageTitle = $page['title'];
         $pageContent = $page['content'];
-        $pageSlug = $page['slug'];
-        $sql = "insert into pages (title, content, slug) values ('$pageTitle', '$pageContent', '$pageSlug')";
+        $btn_name = $page['btn_name'];
+        $sql = "insert into pages (title, content, slug) values ('$pageTitle', '$pageContent', '$btn_name')";
         $result = $this->db->query($sql);
         if($result){
             return "Стаття успішно додана";
@@ -69,8 +69,8 @@ class Page extends BaseModel
     {
         $pageTitle = $page['title'];
         $pageContent = $page['content'];
-        $pageSlug = $page['slug'];
-        $sql = "update pages SET title = '$pageTitle', content = '$pageContent', slug = '$pageSlug' where id = {$idPage}";
+        $btn_name = $page['btn_name'];
+        $sql = "update pages SET title = '$pageTitle', content = '$pageContent', slug = '$btn_name' where id = {$idPage}";
         return $this->db->query($sql);
 
     }
