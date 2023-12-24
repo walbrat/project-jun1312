@@ -63,7 +63,7 @@ class PageController extends BaseController
      */
     public function update(): void
     {
-        $idPage = filter_input(INPUT_POST, 'idPage');
+        $id = filter_input(INPUT_POST, 'id');
         $title = filter_input(INPUT_POST, 'title');
         $content = filter_input(INPUT_POST, 'content');
         $btn_name = filter_input(INPUT_POST, 'btn_name');
@@ -73,7 +73,7 @@ class PageController extends BaseController
             'btn_name'=>$btn_name
         ];
     
-        $result = $this->model->updatePage($idPage, $page);
+        $result = $this->model->updatePage($id, $page);
         if($result){
             $url = Router::getUrl('page', 'index', true);
             Router::redirect($url);
@@ -81,6 +81,14 @@ class PageController extends BaseController
             $url = Router::getUrl('page', 'error', true);
             Router::redirect($url);
         }
+    }
+    public function edit(): void
+    {
+        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        $this->data[] = $this->model->getPage($id);
+        $this->data['url'] = Router::getUrl('page', 'update', 'id='.$id);
+        $this->view->adminRender('edit', $this->data);
+
     }
 
     /**
@@ -102,28 +110,4 @@ class PageController extends BaseController
     {
         $this->view->adminRender('error');
     }
-
-    public function edit(): void
-    {
-
-        $this->data[] = $this->model->getPages();
-        var_dump($this->data);
-        $this->data['url'] = Router::getUrl('page', 'update');
-        $this->view->adminRender('edit', $this->data);
-
-    }
-//    public function getform(): void
-//    {
-//        $idPage = filter_input(INPUT_GET, 'idPage', FILTER_VALIDATE_INT);
-//        if($idPage){
-//            $result = $this->model->getPage($idPage);
-//            $result['actionForForm'] = Router::getUrl('page', 'update',true);
-//            $result['buttonText'] = 'Edit';
-//            $this->view->adminRender('form', $result);
-//        }else{
-//            $result['actionForForm'] = Router::getUrl('page', 'create',true);
-//            $result['buttonText'] = 'Create';
-//            $this->view->adminRender('form', $result);
-//        }
-//    }
 }
