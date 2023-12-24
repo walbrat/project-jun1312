@@ -12,7 +12,7 @@
         <!-- Sidebar -->
         <?php include_once ADMIN_PAGES_FOLDER . 'includes/header.php'; ?>
         <!-- Page Content -->
-        <div style="margin-left:25%">
+        <div style="margin-left:15%">
             <div class="w3-container w3-teal">
                 <h1>Dashboard</h1>
             </div>
