@@ -18,7 +18,7 @@ use core\Router;
             <td><?= $page['id']; ?></td>
             <td><?= $page['title']; ?></td>
             <td><?= $page['content']; ?></td>
-            <td><?= $page['slug']; ?></td>
+            <td><?= $page['btn_name']; ?></td>
             <td>
                 <a class="btn btn-secondary" href="<?= Router::getUrl('page', 'getform',  'id=' . $page['id']) ?>">Edit</a>
                 <a class="btn btn-success" href="<?= Router::getUrl('page', 'destroy',  'id=' . $page['id']) ?>">Delete</a>

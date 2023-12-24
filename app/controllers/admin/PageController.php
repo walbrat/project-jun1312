@@ -31,11 +31,11 @@ class PageController extends BaseController
     {
         $title = filter_input(INPUT_POST, 'title');
         $content = filter_input(INPUT_POST, 'content');
-        $slug = filter_input(INPUT_POST, 'slug');
+        $btn_name = filter_input(INPUT_POST, 'btn_name');
         $page = [
             'title'=> $title,
             'content'=>$content,
-            'slug'=>$slug
+            'btn_name'=>$btn_name
         ];
     
         $result = $this->model->addPage($page);
@@ -66,11 +66,11 @@ class PageController extends BaseController
         $idPage = filter_input(INPUT_POST, 'idPage');
         $title = filter_input(INPUT_POST, 'title');
         $content = filter_input(INPUT_POST, 'content');
-        $slug = filter_input(INPUT_POST, 'slug');
+        $btn_name = filter_input(INPUT_POST, 'btn_name');
         $page = [
             'title'=> $title,
             'content'=>$content,
-            'slug'=>$slug
+            'btn_name'=>$btn_name
         ];
     
         $result = $this->model->updatePage($idPage, $page);
@@ -105,7 +105,8 @@ class PageController extends BaseController
     
     public function getform(): void
     {
-        $idPage = filter_input(INPUT_GET, 'idPage', FILTER_VALIDATE_INT);
+        $idPage = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        var_dump($idPage);
         if($idPage){
             $result = $this->model->getPage($idPage);
             $result['actionForForm'] = Router::getUrl('page', 'update',true);
