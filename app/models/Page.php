@@ -7,6 +7,9 @@ use mysqli;
 
 class Page extends BaseModel
 {
+    const LENGTH_TITLE = 255;
+    const LENGTH_CONTENT = 65535;
+    const LENGTH_BTN_NAME = 100;
     /**
      * @return array|mixed
      */
@@ -40,9 +43,14 @@ class Page extends BaseModel
     {
         $pageTitle = $page['title'];
         $pageContent = $page['content'];
-        $btn_name = $page['btn_name'];
-        $sql = "insert into pages (title, content, btn_name) values ('$pageTitle', '$pageContent', '$btn_name')";
-        return $this->db->query($sql);
+        $pagebtn_name = $page['btn_name'];
+        $sql = "insert into pages (title, content, btn_name) values ('$pageTitle', '$pageContent', '$pagebtn_name')";
+        $result = $this->db->query($sql);
+        if($result){
+            return "Стаття успішно додана";
+        }else{
+            exit("Помилка:" . $sql . "<br>" . $this->db->error);
+        }
     }
     
     /**
@@ -60,12 +68,12 @@ class Page extends BaseModel
      * @param array $page
      * @return string|void
      */
-    public function updatePage(int $idPage, array $data)//edit було
+    public function updatePage(int $idPage, array $page)//edit було
     {
-        $pageTitle = $data['title'];
-        $pageContent = $data['content'];
-        $btn_name = $data['btn_name'];
-        $sql = "update pages SET title = '$pageTitle', content = '$pageContent', btn_name = '$btn_name' where id = {$idPage}";
+        $pageTitle = $page['title'];
+        $pageContent = $page['content'];
+        $pagebtn_name = $page['btn_name'];
+        $sql = "update pages SET title = '$pageTitle', content = '$pageContent', btn_name = '$pagebtn_name' where id = {$idPage}";
         return $this->db->query($sql);
 
     }

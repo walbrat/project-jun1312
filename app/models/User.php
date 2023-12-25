@@ -67,8 +67,8 @@ class User extends BaseModel
         $id = $this->escape($data['id']);
         $title = $this->escape($data['title']);
         $content = $this->escape($data['content']);
-        $slug = $this->escape($data['slug']);
-        $sql = "update pages SET title = '$title', content = '$content', slug = '$slug' where id = {$id}";
+        $btn_name = $this->escape($data['btn_name']);
+        $sql = "update pages SET title = '$title', content = '$content', btn_name = '$btn_name' where id = {$id}";
         return $this->db->query($sql);
 
     }
