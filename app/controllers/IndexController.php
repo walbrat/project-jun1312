@@ -3,7 +3,7 @@
 namespace controllers;
 
 use core\BaseController;
-use core\BaseModel;
+use models\Page;
 use core\View;
 
 class IndexController extends BaseController
