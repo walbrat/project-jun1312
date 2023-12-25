@@ -1,9 +1,9 @@
 <div class="w3-container">
     <div class="w3-card-4 autch">
         <div class="w3-container w3-amber">
-            <h2>Register root user now</h2>
+            <h2><?php echo $title; ?></h2>
         </div>
-        <form name="registration_form" class="w3-container" action="/" method="post">
+        <form name="registration_form" class="w3-container" action="<?php echo $url; ?>" method="post">
             <p>
                 <label>Login</label>
                 <input name="login" type="text" value="" class="w3-input w3-border" >

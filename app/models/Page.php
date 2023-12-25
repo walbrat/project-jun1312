@@ -7,23 +7,9 @@ use mysqli;
 
 class Page extends BaseModel
 {
-    /**
-     * @var int
-     */
-    public int $id;
-    /**
-     * @var string
-     */
-    public string $title;
-    /**
-     * @var string
-     */
-    public string $content;
-    /**
-     * @var int
-     */
-    public int $slug;
-    
+    const LENGTH_TITLE = 255;
+    const LENGTH_CONTENT = 65535;
+    const LENGTH_BTN_NAME = 100;
     /**
      * @return array|mixed
      */
@@ -46,22 +32,19 @@ class Page extends BaseModel
     {
         $sql = "select * from pages where id = $idPage;";
         $result = $this->db->query($sql);
-        $dataPage = $result->fetch_assoc();//масив з даними сторніки
-        $this->id = $dataPage['id'];
-        $this->title = $dataPage['title'];
-        $this->content = $dataPage['content'];
-        $this->slug = $dataPage['slug'];
+        return $result->fetch_assoc();//масив з даними сторніки
+        
     }
     
     /**
      * @return string|void
      */
-    public function addPage()
+    public function addPage(array $page)
     {
-//        $pageTitle = $page['title'];
-//        $pageContent = $page['content'];
-//        $pageSlug = $page['slug'];
-        $sql = "insert into pages (title, content, slug) values ('$this->title', '$this->content', '$this->slug')";
+        $pageTitle = $page['title'];
+        $pageContent = $page['content'];
+        $pagebtn_name = $page['btn_name'];
+        $sql = "insert into pages (title, content, btn_name) values ('$pageTitle', '$pageContent', '$pagebtn_name')";
         $result = $this->db->query($sql);
         if($result){
             return "Стаття успішно додана";
@@ -77,24 +60,21 @@ class Page extends BaseModel
     public function delPage(int $idPage)
     {
         $sql = "delete from pages where id = {$idPage}";
-        $result = $this->db->query($sql);
-        if($result){
-            return "Стаття успішно видалена";
-        }else{
-            exit("Помилка: " . $sql . "<br>" . $this->db->error);
-        }
+        return $this->db->query($sql);
     }
     
     /**
+     * @param int $idPage
+     * @param array $page
      * @return string|void
      */
-    public function updatePage()//edit було
+    public function updatePage(int $idPage, array $page)//edit було
     {
-        $sql = "update pages SET title = '$this->title', content = '$this->content', slug = '$this->slug' where id = {$this->id}";
-        $result = $this->db->query($sql);
-        if(!$result){
-            exit("Помилка: " . $sql . "<br>" . $this->db->error);
-        }
-        return "Дані статті успішно відредаговано";
+        $pageTitle = $page['title'];
+        $pageContent = $page['content'];
+        $pagebtn_name = $page['btn_name'];
+        $sql = "update pages SET title = '$pageTitle', content = '$pageContent', btn_name = '$pagebtn_name' where id = {$idPage}";
+        return $this->db->query($sql);
+
     }
 }
