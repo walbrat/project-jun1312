@@ -22,7 +22,7 @@ use core\Router;
             <td>
                 <a class="btn btn-secondary" href="<?= Router::getUrl('page', 'edit',  'id=' . $page['id']) ?>">Edit</a>
                 <a class="btn btn-success" href="<?= Router::getUrl('page', 'destroy',  'id=' . $page['id']) ?>">Delete</a>
-                
+
             </td>
         </tr>
     <?php endforeach; ?>

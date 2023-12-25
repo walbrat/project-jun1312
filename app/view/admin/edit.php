@@ -9,7 +9,5 @@
         <input type="text" name="btn_name" placeholder="button name" id="btn_name" value="<?= $data[0]['btn_name'] ?? '' ?>">
         <input type="submit" class="btn btn-primary" value="Edit"/>
         <input type="hidden" name="idPage" value="<?= $data['id'] ?? ''?>">
-
-
     </div>
 </form>

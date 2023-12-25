@@ -46,6 +46,4 @@ class Validator
         }
         return true;
     }
-
-
 }

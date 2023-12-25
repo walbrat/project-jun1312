@@ -43,14 +43,9 @@ class Page extends BaseModel
     {
         $pageTitle = $page['title'];
         $pageContent = $page['content'];
-        $pagebtn_name = $page['btn_name'];
-        $sql = "insert into pages (title, content, btn_name) values ('$pageTitle', '$pageContent', '$pagebtn_name')";
-        $result = $this->db->query($sql);
-        if($result){
-            return "Стаття успішно додана";
-        }else{
-            exit("Помилка:" . $sql . "<br>" . $this->db->error);
-        }
+        $btn_name = $page['btn_name'];
+        $sql = "insert into pages (title, content, btn_name) values ('$pageTitle', '$pageContent', '$btn_name')";
+        return $this->db->query($sql);
     }
     
     /**
