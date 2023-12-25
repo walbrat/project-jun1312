@@ -14,40 +14,50 @@ class PageController extends BaseController
         $this->model = new Page();
         $this->view = new View();
     }
-    
+
+    /**
+     * @return void page dashboard
+     */
     public function index(): void
     {
-//        $this->data['title'] = 'Головна сторінка';
-//        $this->data['button_name'] = 'Головна';
-//        $this->data['content'] = 'Тут буде текст з бази';
         $this->data['pages'] = $this->model->getPages();
+        $this->data['create'] =  Router::getUrl('page', 'create');
         $this->view->adminRender('page', $this->data);
     }
 
     /**
-     * @return void
+     * @return void create page
      */
     public function create(): void
     {
-        $title = filter_input(INPUT_POST, 'title');
-        $content = filter_input(INPUT_POST, 'content');
-        $btn_name = filter_input(INPUT_POST, 'btn_name');
-        $page = [
-            'title'=> $title,
-            'content'=>$content,
-            'btn_name'=>$btn_name
-        ];
-    
+        $this->data['url'] = Router::getUrl('page', 'add');
+        $this->view->adminRender('create', $this->data);
+    }
+
+    /**
+     * @return page in database from form
+     */
+    public function add(){
+        foreach ($_POST as $key => $value) {
+            $page[$key] = $value;
+        }
         $result = $this->model->addPage($page);
-        if($result){
-            $url = Router::getUrl('page', 'index', true);
-            Router::redirect($url);
-        }else{
-            $url = Router::getUrl('page', 'error', true);
+        $url = Router::getUrl('page', 'index');
+        if ($result){
             Router::redirect($url);
         }
     }
 
+    /**
+     * @return edit form page
+     */
+    public function edit(): void
+    {
+        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        $this->data[] = $this->model->getPage($id);
+        $this->data['url'] = Router::getUrl('page', 'update', 'id='.$id);
+        $this->view->adminRender('edit', $this->data);
+    }
     /**
      * @param int $id
      * @return void
@@ -56,24 +66,22 @@ class PageController extends BaseController
     {
         // TODO: Implement show() method.
     }
-
     /**
      *
      * @return void
      */
+    /**
+     * @return void
+     */
     public function update(): void
     {
-        $id = filter_input(INPUT_POST, 'id');
-        $title = filter_input(INPUT_POST, 'title');
-        $content = filter_input(INPUT_POST, 'content');
-        $btn_name = filter_input(INPUT_POST, 'btn_name');
-        $page = [
-            'title'=> $title,
-            'content'=>$content,
-            'btn_name'=>$btn_name
+        $id =  filter_input(INPUT_GET, 'id');
+        $data = [
+            'title'=> filter_input(INPUT_POST, 'title'),
+            'content'=>filter_input(INPUT_POST, 'content'),
+            'btn_name'=> filter_input(INPUT_POST, 'btn_name')
         ];
-    
-        $result = $this->model->updatePage($id, $page);
+        $result = $this->model->updatePage($id, $data);
         if($result){
             $url = Router::getUrl('page', 'index', true);
             Router::redirect($url);
@@ -82,14 +90,7 @@ class PageController extends BaseController
             Router::redirect($url);
         }
     }
-    public function edit(): void
-    {
-        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-        $this->data[] = $this->model->getPage($id);
-        $this->data['url'] = Router::getUrl('page', 'update', 'id='.$id);
-        $this->view->adminRender('edit', $this->data);
 
-    }
 
     /**
      * @return void

@@ -27,4 +27,4 @@ use core\Router;
         </tr>
     <?php endforeach; ?>
 </table>
-<a class="btn btn-info" href="<?= Router::getUrl('page', 'create', true) ?>">Create</a>
+<a class="btn btn-info" href=<?=$create?>>Create</a>
