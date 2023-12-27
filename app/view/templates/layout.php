@@ -13,7 +13,7 @@
     <body>
     <div class="w3-container">
         <header class="w3-container w3-teal">
-            <img class="logo" src="/public/images/logo.svg" alt="">
+            <img class="logo" src="/images/logo.svg" alt="">
             <?php include_once PAGES_FOLDER . 'includes\header.php'; ?>
             <h1><?=  $title; ?></h1>
         </header>
