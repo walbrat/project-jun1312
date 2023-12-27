@@ -33,11 +33,12 @@ class Validator
 
     static public function isValid($value, $name = 'field', $length = 3)
     {
-        $value = trim($value);
+
 //        var_dump($value);
         if ($value === '' || !isset($value)) {
             return "{$name} can`t be empty";
         }
+        $value = trim($value);
         if ($value === 0) {
             return "{$name} can`t be zero";
         }
