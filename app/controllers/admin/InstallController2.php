@@ -16,7 +16,8 @@ class InstallController
         $view = new View('install_template');
         $page = 'install';
         $this->data['title'] = 'Реєстрація Root користувача';
-        $this->data['url'] = Router::getUrl('user', 'create');
+        $this->data['text_btn'] = 'Зберігти';
+        $this->data['url'] = Router::getUrl('user', 'store');
         $view->adminRender($page, $this->data);
     }
 }
