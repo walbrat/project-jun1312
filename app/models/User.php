@@ -15,12 +15,7 @@ class User extends BaseModel
         $users = [];
         $sql = "select * from users;";
         $query = $this->db->query($sql);
-        if ($query->num_rows) {
-            while ($result = $query->fetch_all(MYSQLI_ASSOC)) {
-                $users[] = $result;
-            }
-        }
-        return $users;
+        return $query->fetch_all(MYSQLI_ASSOC);
     }
 
     /**
@@ -32,7 +27,7 @@ class User extends BaseModel
         $sql = "select * from users where id = $id;";
         $query = $this->db->query($sql);
         return $query->fetch_assoc();
-        
+
     }
 
     /**
@@ -47,7 +42,7 @@ class User extends BaseModel
         $sql = "insert into users (login, email, password) values ('$login', '$email', '$password')";
         return $this->db->query($sql);
     }
-    
+
     /**
      * @param int $id
      * @return bool
@@ -65,11 +60,33 @@ class User extends BaseModel
     public function update(array $data) : bool
     {
         $id = $this->escape($data['id']);
-        $title = $this->escape($data['title']);
-        $content = $this->escape($data['content']);
-        $btn_name = $this->escape($data['btn_name']);
-        $sql = "update pages SET title = '$title', content = '$content', btn_name = '$btn_name' where id = {$id}";
+        $login = $this->escape($data['login']);
+        $email = $this->escape($data['email']);
+        $sql = "update users SET login = '$login', email = '$email' where id = '$id'";
         return $this->db->query($sql);
+    }
 
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function updatePassword(array $data) : bool
+    {
+        $id = $this->escape($data['id']);
+        $password = $data['password'];
+        $sql = "update users SET password = '$password' where id = '$id'";
+        return $this->db->query($sql);
+    }
+
+    /**
+     * get Count Users in base
+     * @return int
+     */
+    public function getCountUsers() : int
+    {
+        $sql = "select count(id) as count from users";
+        $query = $this->db->query($sql);
+        $return = $query->fetch_assoc();
+        return $return['count'];
     }
 }
