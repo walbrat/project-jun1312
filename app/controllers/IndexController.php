@@ -19,15 +19,28 @@ class IndexController extends BaseController
      */
     public function index(): void
     {
-        $id = filter_input(INPUT_GET, 'id') ?? 1;
+        $id = filter_input(INPUT_GET, 'id');
         $modelPage = new Page();
-        $page = $modelPage->getPage($id);
-        $this->data['title'] = $page['title'];
-        $this->data['content'] = $page['content'];
-        $this->data['menuBtns'] = $this->showMenu();
-        $this->view->render('index', $this->data);
+        $page = null;
+        if($id){
+            $page = $modelPage->getPage($id);
+        }else{
+            $pages = $modelPage->getPages();
+            if(isset($pages[0])){
+                $page = $pages[0];
+            }
+        }
+        if ($page){
+            $this->data['title'] = $page['title'];
+            $this->data['content'] = $page['content'];
+            $this->data['menuBtns'] = $this->showMenu();
+                $this->view->render('index', $this->data);
+        }else{
+            $this->data['title'] = 'Page not found';
+            $this->view->render('page_not_found', $this->data);
+        }
     }
-
+    
     public  function showMenu()
     {
         $modelPage = new Page();
