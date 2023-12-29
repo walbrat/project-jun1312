@@ -22,8 +22,8 @@ class IndexController extends BaseController
         $id = filter_input(INPUT_GET, 'id') ?? 1;
         $modelPage = new Page();
         $page = $modelPage->getPage($id);
-        $this->data['title'] = $page['title'];
-        $this->data['content'] = $page['content'];
+            $this->data['title'] = $page['title'];
+            $this->data['content'] = $page['content'];
         $this->data['menuBtns'] = $this->showMenu();
         $this->view->render('index', $this->data);
     }

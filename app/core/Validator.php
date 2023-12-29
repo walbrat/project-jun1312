@@ -2,8 +2,11 @@
 
 namespace core;
 
+use models\Page;
+
 class Validator
 {
+    public $validateArray = array('title', 'content', 'btn_name');
     /**
      * @param mixed $value
      * @return bool
@@ -15,16 +18,17 @@ class Validator
         }
         return false;
     }
-    
-    /**
-     * @param mixed $value
-     * @param int $length
-     * @return bool
-     */
-    public function matchingLength(mixed $value, int $length): bool
+
+    public function validateLength(mixed $key,mixed $value): bool
     {
-        if(strlen($value)<=$length){
-            return true;
-        }return false;
+        if ($key == 'title' && mb_strlen($value) >= LENGTH_TITLE
+            || $key == 'content' && mb_strlen($value) >= LENGTH_CONTENT
+            || $key == 'btn_name' && mb_strlen($value) >= LENGTH_BTN_NAME){
+            return 'true';
+        }
+         else {
+            return false;
+        }
     }
+
 }

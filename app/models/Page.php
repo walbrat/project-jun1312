@@ -7,9 +7,7 @@ use mysqli;
 
 class Page extends BaseModel
 {
-    const LENGTH_TITLE = 255;
-    const LENGTH_CONTENT = 65535;
-    const LENGTH_BTN_NAME = 100;
+
     /**
      * @return array|mixed
      */
@@ -32,6 +30,7 @@ class Page extends BaseModel
     {
         $sql = "select * from pages where id = $idPage;";
         $result = $this->db->query($sql);
+
         return $result->fetch_assoc();//масив з даними сторніки
         
     }
