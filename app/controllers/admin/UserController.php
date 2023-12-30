@@ -18,6 +18,7 @@ class UserController extends BaseController
     {
         $user = new User();
         $page = 'user';
+        $this->checkRootUser();
         $this->data['title'] = 'Перелік адміністраторів';
         foreach ($user->getUsers() as $user) {
             $this->data['users'][] = [
@@ -152,5 +153,36 @@ class UserController extends BaseController
         } else {
             throw new \Exception('Помилка видалення з БД');
         }
+    }
+
+    /**
+     * Цей метод перевіряє існування файла install.php, та чи є в базі даних користувачі.
+     * @return mixed
+     */
+    public function checkRootUser(): mixed
+    {
+        $page = 'install';
+        $installFile = ADMIN_PAGES_FOLDER . $page . '.php';
+        $installTemplateFile = TEMPLATES_ADMIN_FOLDER . $page . '_template.php';
+        $installControllerFile =  __DIR__ . DIRECTORY_SEPARATOR . ucfirst($page) . 'Controller.php';
+        $users = new User();
+        $getCountUsers = $users->getCountUsers();
+
+        if ($getCountUsers > 0) {
+            if (file_exists($installFile)) {
+                unlink($installFile);
+            }
+            if (file_exists($installTemplateFile)) {
+                unlink($installTemplateFile);
+            }
+            if (file_exists($installControllerFile)) {
+                unlink($installControllerFile);
+            }
+        }
+        if (file_exists($installFile) || file_exists($installFile) || file_exists($installControllerFile)) {
+            $url = Router::getUrl('install', 'index');
+            Router::redirect($url);
+        }
+        return false;
     }
 }

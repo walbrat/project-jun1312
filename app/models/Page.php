@@ -15,7 +15,7 @@ class Page extends BaseModel
      */
     public function getPages()
     {
-        $sql = "select * from pages;";
+        $sql = "SELECT * FROM `pages` ORDER BY `pages`.`id` ASC ;";
         $result = $this->db->query($sql);
         $pages = $result->fetch_all(MYSQLI_ASSOC);
         if ($pages) {
