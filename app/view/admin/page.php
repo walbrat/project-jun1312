@@ -20,11 +20,11 @@ use core\Router;
             <td><?= $page['content']; ?></td>
             <td><?= $page['btn_name']; ?></td>
             <td>
-                <a class="btn btn-secondary" href="<?= Router::getUrl('page', 'edit',  'id=' . $page['id']) ?>">Edit</a>
+                <a class="btn btn-secondary" href="<?= Router::getUrl('page', 'getform',  'id=' . $page['id']) ?>">Edit</a>
                 <a class="btn btn-success" href="<?= Router::getUrl('page', 'destroy',  'id=' . $page['id']) ?>">Delete</a>
 
             </td>
         </tr>
     <?php endforeach; ?>
 </table>
-<a class="btn btn-info" href=<?=$create?>>Create</a>
+<a class="btn btn-info" href=<?= Router::getUrl('page', 'getform') ?>>Create</a>

@@ -21,7 +21,6 @@ class PageController extends BaseController
     public function index(): void
     {
         $this->data['pages'] = $this->model->getPages();
-        $this->data['create'] =  Router::getUrl('page', 'create');
         $this->view->adminRender('page', $this->data);
     }
 
@@ -30,25 +29,23 @@ class PageController extends BaseController
      */
     public function create(): void
     {
-        $this->data['url'] = Router::getUrl('page', 'add');
-        $this->view->adminRender('create', $this->data);
-    }
-    public function add(){
-        foreach ($_POST as $key => $value) {
-            $page[$key] = $value;
-        }
+        $title = filter_input(INPUT_POST, 'title');
+        $content = filter_input(INPUT_POST, 'content');
+        $btn_name = filter_input(INPUT_POST, 'btn_name');
+        $page = [
+            'title'=> $title,
+            'content'=>$content,
+            'btn_name'=>$btn_name
+        ];
+        $this->doValidation($title, $content, $btn_name);
         $result = $this->model->addPage($page);
-        $url = Router::getUrl('page', 'index');
-        if ($result){
+        if($result){
+            $url = Router::getUrl('page', 'index');
+            Router::redirect($url);
+        }else{
+            $url = Router::getUrl('page', 'error');
             Router::redirect($url);
         }
-    }
-    public function edit(): void
-    {
-        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-        $this->data[] = $this->model->getPage($id);
-        $this->data['url'] = Router::getUrl('page', 'update', 'id='.$id);
-        $this->view->adminRender('edit', $this->data);
     }
 
     /**
@@ -66,18 +63,22 @@ class PageController extends BaseController
      */
     public function update(): void
     {
-        $id =  filter_input(INPUT_GET, 'id');
-        $data = [
-            'title'=> filter_input(INPUT_POST, 'title'),
-            'content'=>filter_input(INPUT_POST, 'content'),
-            'btn_name'=> filter_input(INPUT_POST, 'btn_name')
+        $idPage = filter_input(INPUT_POST, 'id');
+        $title = filter_input(INPUT_POST, 'title');
+        $content = filter_input(INPUT_POST, 'content');
+        $btn_name = filter_input(INPUT_POST, 'btn_name');
+        $page = [
+            'title'=> $title,
+            'content'=>$content,
+            'btn_name'=>$btn_name
         ];
-        $result = $this->model->updatePage($id, $data);
+        $this->doValidation($title, $content, $btn_name, $idPage);
+        $result = $this->model->updatePage($idPage, $page);
         if($result){
-            $url = Router::getUrl('page', 'index', true);
+            $url = Router::getUrl('page', 'index');
             Router::redirect($url);
         }else{
-            $url = Router::getUrl('page', 'error', true);
+            $url = Router::getUrl('page', 'error');
             Router::redirect($url);
         }
     }
@@ -125,7 +126,7 @@ class PageController extends BaseController
             $result['actionForForm'] = Router::getUrl('page', 'create');
             $result['buttonText'] = 'Create';
         }
-        $this->view->adminRender('form', $result);
+        $this->view->adminRender('page_form', $result);
     }
     
     /**

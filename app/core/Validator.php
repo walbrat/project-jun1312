@@ -8,7 +8,7 @@ class Validator
      * @param mixed $value
      * @return bool
      */
-    public function isEmpty(mixed $value): bool
+    public function isEmpty($value): bool
     {
         if(empty($value)){
             return true;
@@ -21,10 +21,11 @@ class Validator
      * @param int $length
      * @return bool
      */
-    public function matchingLength(mixed $value, int $length): bool
+    public function matchingLength($value, int $length): bool
     {
         if(strlen($value)<=$length){
             return true;
-        }return false;
+        }
+        return false;
     }
 }
