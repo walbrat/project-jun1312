@@ -157,9 +157,8 @@ class UserController extends BaseController
 
     /**
      * Цей метод перевіряє існування файла install.php, та чи є в базі даних користувачі.
-     * @return mixed
      */
-    public function checkRootUser(): mixed
+    public function checkRootUser()
     {
         $page = 'install';
         $installFile = ADMIN_PAGES_FOLDER . $page . '.php';

@@ -22,7 +22,7 @@ class User extends BaseModel
      * @param int $id
      * @return array|false|null
      */
-    public function getUserById(int $id) : array|false|null
+    public function getUserById(int $id)
     {
         $sql = "select * from users where id = $id;";
         $query = $this->db->query($sql);
