@@ -8,7 +8,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="/css/style.css">
-    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+
 </head>
 <body>
 <!-- Sidebar -->
@@ -25,13 +25,7 @@
         <?php include_once ADMIN_PAGES_FOLDER . $page . '.php'; ?>
     </div>
     <?php include_once ADMIN_PAGES_FOLDER . 'includes/footer.php'; ?>
-    <script>
-        ClassicEditor
-            .create( document.querySelector( '#content' ) )
-            .catch( error => {
-                console.error( error );
-            } );
-    </script>
+
 </div>
 </body>
 </html>
