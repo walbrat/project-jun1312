@@ -5,7 +5,6 @@
         <th>Login</th>
         <th>E-mail</th>
         <th></th>
-        <th></th>
     </tr>
 
     <?php foreach ($users as $user): ?>
@@ -13,8 +12,8 @@
             <td><?= $user['id']; ?></td>
             <td><?= $user['login']; ?></td>
             <td><?= $user['email']; ?></td>
-            <td><a class="btn btn-secondary" href="<?= $user['url_edit']; ?>">Edit</a></td>
-            <td><a class="btn btn-success" href="<?= $user['url_destroy']; ?>">Delete</a></td>
+            <td><?php if (!empty($user['url_edit'])) {?><a class="btn btn-secondary" href="<?=$user['url_edit']; ?>">Edit</a><?php } ?>
+            <?php if (!empty($user['url_destroy'])) {?><a class="btn btn-success" href="<?=$user['url_destroy']; ?>">Delete</a><?php } ?></td>
         </tr>
     <?php endforeach; ?>
 </table>
