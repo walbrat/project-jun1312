@@ -4,13 +4,19 @@ namespace helpers;
 
 class Session
 {
+    /**
+     * @param array $errors
+     * @return void
+     */
     static public function setErrors(array $errors)
     {
         session_start();
         $_SESSION['errors'] = $errors;
-
     }
 
+    /**
+     * @return array|mixed
+     */
     static public function getErrors()
     {
         session_start();
@@ -22,33 +28,42 @@ class Session
         return [];
     }
 
+    /**
+     * @param string $name
+     * @param $value
+     * @return void
+     */
     static public function setValue( string $name, $value)
     {
         session_start();
         $_SESSION[$name] = $value;
-
     }
 
+    /**
+     * @param string $name
+     * @return mixed|null
+     */
     static public function getValue(string $name)
     {
         session_start();
         if (isset($_SESSION[$name])) {
-            return $_SESSION[$name];
+            $value = $_SESSION[$name];
+            unset($_SESSION[$name]);
+            return $value;
         }
         return null;
     }
 
-
-    static public function delFromSession($keys=[])
+    /**
+     * @param $keys
+     * @return void
+     */
+    static public function delFromSession(array $keys) : void
     {
         session_start();
-        if(isset($keys)){
-            session_destroy();
-        }else{
-            foreach ($keys as $key){
-                if (!isset($_SESSION[$key])) {
-                    unset($_SESSION[$key]);
-                }
+        foreach ($keys as $key => $value){
+            if (isset($_SESSION[$key])) {
+                unset($_SESSION[$key]);
             }
         }
     }
@@ -59,8 +74,21 @@ class Session
     static public function isAuth(): bool
     {
         session_start();
+        return !empty($_SESSION['user']);
+    }
 
-        return !empty($_SESSION['login']);
+    /**
+     * @return bool
+     */
+    static public function isAuthRoot(): bool
+    {
+        if (self::isAuth()) {
+            $user = self::getAuthUser();
+            if ($user['id'] == 1) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -69,9 +97,9 @@ class Session
     static public function getAuthUser(): ?array
     {
         session_start();
-        if(empty($_SESSION['login'])){
+        if(empty($_SESSION['user'])){
             return null;
         }
-        return $_SESSION['login'];
+        return $_SESSION['user'];
     }
 }

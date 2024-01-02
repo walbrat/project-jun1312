@@ -2,11 +2,14 @@
 
 namespace core;
 
+use helpers\Session;
+
 class Router
 {
     const DEFAULT_ACTION = 'index';
     const DEFAULT_CONTROLLER = 'Index';
     const DEFAULT_ADMIN_CONTROLLER = 'Admin';
+    const DEFAULT_AUTH_CONTROLLER = 'Auth';
 
     /**
      * @return void
@@ -41,15 +44,24 @@ class Router
         $routeArray = array_values($routeArray);
         if (isset($routeArray[0]) && self::isAdminDashboard($routeArray[0]))
         {
-            $controllerName = $routeArray[1] ?? self::DEFAULT_ADMIN_CONTROLLER;
-            $return['route_controller'] = $routeArray[0];
-            $controllerName = trim($controllerName);
-            $controllerName = strtolower($controllerName);
-            $controllerName = ucfirst($controllerName);
-            $controllerName = '\controllers\admin\\' . $controllerName . 'Controller';
-            $action = $routeArray[2] ?? self::DEFAULT_ACTION;
-            $action = trim($action);
-            $action = strtolower($action);
+            if (Session::isAuth()) {
+                $controllerName = $routeArray[1] ?? self::DEFAULT_ADMIN_CONTROLLER;
+                $return['route_controller'] = $routeArray[0];
+                $controllerName = trim($controllerName);
+                $controllerName = strtolower($controllerName);
+                $controllerName = ucfirst($controllerName);
+                $controllerName = '\controllers\admin\\' . $controllerName . 'Controller';
+                $action = $routeArray[2] ?? self::DEFAULT_ACTION;
+                $action = trim($action);
+                $action = strtolower($action);
+            } else {
+                $controllerName = self::DEFAULT_AUTH_CONTROLLER;
+                $return['route_controller'] = $routeArray[0];
+                $controllerName = '\controllers\admin\\' . $controllerName . 'Controller';
+                $action = $routeArray[2] ?? self::DEFAULT_ACTION;
+                $action = trim($action);
+                $action = strtolower($action);
+            }
         } else {
             $controllerName = $routeArray[0] ?? self::DEFAULT_CONTROLLER;
             $return['route_controller'] = $controllerName;

@@ -11,7 +11,7 @@
     <title><?php echo SITE_NAME; ?></title>
 </head>
 <body>
-<div class="w3-container">
+<div id="content" class="w3-container">
     <header class="w3-container w3-teal">
         <img class="logo" src="/images/logo.svg" alt="">
         <h1><?php echo $title; ?></h1>

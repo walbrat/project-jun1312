@@ -3,6 +3,7 @@
 namespace models;
 
 use core\BaseModel;
+use helpers\Session;
 use \mysqli;
 
 class User extends BaseModel
@@ -22,20 +23,41 @@ class User extends BaseModel
      * @param int $id
      * @return array|false|null
      */
-    public function getUserById(int $id)
+    public function getUserById(int $id) : array|false|null
     {
-        $sql = "select * from users where id = $id;";
+        $sql = "select * from users where id = '$id' ;";
         $query = $this->db->query($sql);
         return $query->fetch_assoc();
+    }
 
+    /**
+     * @param string $login
+     * @return array|false|null
+     */
+    public function getUserByLogin(string $login) : array|false|null
+    {
+        $sql = "select * from users where login = '$login' ;";
+        $query = $this->db->query($sql);
+        return $query->fetch_assoc();
+    }
+
+    /**
+     * @param string $email
+     * @return array|false|null
+     */
+    public function getUserByEmail(string $email) : array|false|null
+    {
+        $sql = "select * from users where email = '$email' ;";
+        $query = $this->db->query($sql);
+        return $query->fetch_assoc();
     }
 
     /**
      * @param array $data
      * @return bool
      */
-    public function create(array $data) : bool
-    {
+    public function create(array $data) : bool    {
+
         $login = $this->escape($data['login']);
         $email = $this->escape($data['email']);
         $password = $this->escape($data['password']);
@@ -44,12 +66,15 @@ class User extends BaseModel
     }
 
     /**
-     * @param int $id
-     * @return bool
+     * @param $data
+     * @return bool|false
      */
-    public function destroy(int $id) : bool
+    public function destroy($data) : bool
     {
-        $sql = "delete from users where id = {$id}";
+        if (!Session::isAuthRoot() && $data['id'] == 1) {
+            return false;
+        }
+        $sql = "delete from users where id = '".$data['id']."'";
         return $this->db->query($sql);
     }
 
@@ -59,6 +84,9 @@ class User extends BaseModel
      */
     public function update(array $data) : bool
     {
+        if (!Session::isAuthRoot() && $data['id'] == 1) {
+            return false;
+        }
         $id = $this->escape($data['id']);
         $login = $this->escape($data['login']);
         $email = $this->escape($data['email']);
@@ -72,21 +100,12 @@ class User extends BaseModel
      */
     public function updatePassword(array $data) : bool
     {
+        if (!Session::isAuthRoot() && $data['id'] == 1) {
+            return false;
+        }
         $id = $this->escape($data['id']);
         $password = $data['password'];
         $sql = "update users SET password = '$password' where id = '$id'";
         return $this->db->query($sql);
-    }
-
-    /**
-     * get Count Users in base
-     * @return int
-     */
-    public function getCountUsers() : int
-    {
-        $sql = "select count(id) as count from users";
-        $query = $this->db->query($sql);
-        $return = $query->fetch_assoc();
-        return $return['count'];
     }
 }
