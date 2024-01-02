@@ -36,6 +36,7 @@ class IndexController extends BaseController
             $this->data['menuBtns'] = $this->showMenu();
                 $this->view->render('index', $this->data);
         }else{
+            $this->data['menuBtns'] = [];
             $this->data['title'] = 'Page not found';
             $this->view->render('page_not_found', $this->data);
         }
