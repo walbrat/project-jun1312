@@ -6,21 +6,98 @@ use core\BaseController;
 use core\Router;
 use core\View;
 use helpers\Session;
-use helpers\Validator;
-use models\Auth;
+use core\Validator;
+use models\User;
 
 class AuthController extends BaseController
 {
     /**
      * @var string
      */
-    public string $layout = 'layout';
+    public string $layout = 'registration_layout';
 
     public function __construct()
     {
         parent::__construct();
         $this->view = new View($this->layout);
-        $this->model = new Auth();
+        $this->model = new User();
+    }
+    /**
+     * @return void
+     */
+    public function index(): void
+    {
+        if (Session::isAuth()) {
+            $url = Router::getUrl('admin', 'index');
+            Router::redirect($url);
+        } else {
+            $this->checkRootUser();
+            $page = 'login';
+            $this->data['title'] = 'Authorization';
+            $this->data['text_btn'] = 'Sign in';
+            $this->data['text_btn_cancel'] = 'Cancel';
+            $this->data['login'] = Session::getValue('login');
+            $this->data['password'] = Session::getValue('password');
+            $this->data['errors'] = Session::getErrors();
+            $this->data['url'] = Router::getUrl('auth', 'login');
+            $this->view->adminRender($page, $this->data);
+        }
+    }
+
+    /**
+     * Цей метод перевіряє існування файла install.php, та чи є в базі даних користувачі.
+     */
+    public function checkRootUser()
+    {
+        $installControllerFile =  __DIR__ . DIRECTORY_SEPARATOR . 'InstallController.php';
+        if (file_exists($installControllerFile)) {
+            $view = new View('registration_layout');
+            $page = 'user_form';
+            $this->data['title'] = 'Root user registration';
+            $this->data['text_btn'] = 'Save';
+            $this->data['text_btn_cancel'] = 'Cancel';
+            $this->data['password'] = Session::getValue('password');
+            $this->data['password_confirm'] = Session::getValue('password_confirm');
+            $this->data['errors'] = Session::getErrors();
+            $this->data['url'] = Router::getUrl('auth', 'store');
+            $this->data['url_cancel'] = Router::getUrl('auth','index');
+            $view->adminRender($page, $this->data);
+        }
+    }
+
+    /**
+     * Запис в БД даних нового адміністратора
+     * @return void
+     * @throws \Exception
+     */
+    public function store(): void
+    {
+        $users = new User();
+        $this->data['login'] = filter_input(INPUT_POST, 'login', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $this->data['email'] = strtolower(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        $this->data['password'] = filter_input(INPUT_POST, 'password');
+        $this->data['password_confirm'] = filter_input(INPUT_POST, 'password_confirm');
+        foreach ($this->data as $key => $value) {
+            Session::setValue($key, $value);
+        }
+        $doValidation = $this->doValidation($this->data);
+        if (empty($doValidation)) {
+            $this->data['password'] = password_hash($this->data['password'], PASSWORD_DEFAULT);
+            if ($users->create($this->data)) {
+                Session::delFromSession($this->data);
+                $installControllerFile =  __DIR__ . DIRECTORY_SEPARATOR . 'InstallController.php';
+                if (file_exists($installControllerFile)) {
+                    unlink($installControllerFile);
+                }
+                $url = Router::getUrl('auth', 'index');
+                Router::redirect($url);
+            } else {
+                throw new \Exception('Помилка запису у БД');
+            }
+        } else {
+            Session::setErrors($doValidation);
+            Router::redirect($_SERVER['HTTP_REFERER']);
+        }
     }
 
     /**
@@ -28,80 +105,59 @@ class AuthController extends BaseController
      */
     public function login(): void
     {
-
-        $this->view->adminRender('login', [
-            'login' => Session::getValue('login'),
-            'errors' => Session::getErrors(),
-        ]);
+        $this->data['login'] = filter_input(INPUT_POST, 'login');
+        $this->data['password'] = filter_input(INPUT_POST, 'password');
+        foreach ($this->data as $key => $value) {
+            Session::setValue($key, $value);
+        }
+        $doValidation = $this->doValidation($this->data);
+        if (empty($doValidation)) {
+            if ($this->authentication($this->data['login'], $this->data['password'])) {
+                Session::delFromSession($this->data);
+                $url = Router::getUrl('admin','index');
+                Router::redirect($url);
+            } else {
+                $url = Router::getUrl('auth','index');
+                Router::redirect($url);
+            }
+        } else {
+            Session::setErrors($doValidation);
+            Router::redirect($_SERVER['HTTP_REFERER']);
+        }
     }
 
     /**
-     * @return void
+     * @param string $login
+     * @param string $password
+     * @return bool
      */
-    public function checkLogin(): void
+    public function authentication(string $login, string $password) : bool
     {
-        $login = filter_input(INPUT_POST, 'login');
-        $password = filter_input(INPUT_POST, 'password');
-//        var_dump($login, $password);
-        $is_valid = Validator::checkListInput([$login, $password]);
-        if (!$is_valid) {
-            Router::redirect('login');
-        }
         $user = $this->model->getUserByLogin($login);
-        $realPass = password_verify($password, $user['password']);
-
-        if ($realPass) {
-            Session::setValue('login', $login);
-            $this->view->adminRender('dashboard', [
-                'login' => $login,
-            ]);
+        if ($user) {
+            if (password_verify($password, $user['password'])) {
+                $this->setUser($user);
+                return true;
+            } else {
+                $errors['login'] = "Пара логін пароль не співпадає";
+                $errors['password'] = "Пара логін пароль не співпадає";
+                Session::setErrors($errors);
+            }
         } else {
-            Session::delFromSession('errors');
-            $errors[] = 'incorrect login or password!';
+            $errors['login'] = "Пара логін пароль не співпадає";
+            $errors['password'] = "Пара логін пароль не співпадає";
             Session::setErrors($errors);
-            Session::setValue('login', $login);
-            Router::redirect('login');
         }
-
+        return false;
     }
 
     /**
+     * @param array $data
      * @return void
      */
-    public function register(): void
+    public function setUser(array $data) : void
     {
-        $this->view->adminRender('register', [
-            'login' => Session::getValue('login'),
-            'email' => Session::getValue('email'),
-            'errors' => Session::getErrors(),
-        ]);
-    }
-
-    /**
-     * @return void
-     */
-    public function checkRegister(): void
-    {
-        $login = filter_input(INPUT_POST, 'login');
-        $email = filter_input(INPUT_POST, 'email');
-        $password = filter_input(INPUT_POST, 'password');
-        $conf_password = filter_input(INPUT_POST, 'password_confirm');
-        Validator::checkListInput([$login, $email, $password]);
-        if (!Validator::equalPass($password, $conf_password)) {
-            Router::redirect('register');
-        }
-        $hash_pass = password_hash($password, PASSWORD_BCRYPT);
-
-        if (!empty($_SESSION['errors'])) {
-            Session::setValue('login', $login);
-            Session::setValue('email', $email);
-            Router::redirect('register');
-
-        } else {
-            $this->model->addUser($login, $hash_pass, $email);
-            Session::delFromSession();
-            Router::redirect('');
-        }
+        Session::setValue('user', $data);
     }
 
     /**
@@ -114,4 +170,27 @@ class AuthController extends BaseController
         Router::redirect('/');
     }
 
+    /**
+     * @param array $filds
+     * @return array
+     */
+    protected function doValidation(array $filds) : array
+    {
+        $errors = [];
+        $validator = new Validator();
+        foreach ($filds as $fild => $value) {
+            if (empty($value)) {
+                $errors[$fild] = "Поле має бути заповнене.";
+            } else {
+                if ($fild == 'login' && !$validator->matchingLength($value, 100)) {
+                    $errors[$fild] = "Перевищено максимальну кількість символів";
+                }
+                if ($fild == 'password' && !$validator->matchingLength($value, 255)) {
+                    $errors[$fild] = "Перевищено максимальну кількість символів";
+                }
+
+            }
+        }
+        return $errors;
+    }
 }
