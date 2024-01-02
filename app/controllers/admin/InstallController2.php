@@ -15,13 +15,13 @@ class InstallController
     {
         $view = new View('registration_layout');
         $page = 'user_form';
-        $this->data['title'] = 'Реєстрація Root користувача';
-        $this->data['text_btn'] = 'Зберегти';
-        $this->data['text_btn_cancel'] = 'Відмінити';
+        $this->data['title'] = 'Root user registration';
+        $this->data['text_btn'] = 'Save';
+        $this->data['text_btn_cancel'] = 'Cancel';
         $this->data['password'] = Session::getValue('password');
         $this->data['password_confirm'] = Session::getValue('password_confirm');
         $this->data['errors'] = Session::getErrors();
-        $this->data['url'] = Router::getUrl('auth', 'store');
+        $this->data['url'] = Router::getUrl('user', 'store');
         $view->adminRender($page, $this->data);
     }
 }
