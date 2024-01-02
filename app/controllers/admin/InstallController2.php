@@ -22,6 +22,7 @@ class InstallController
         $this->data['password_confirm'] = Session::getValue('password_confirm');
         $this->data['errors'] = Session::getErrors();
         $this->data['url'] = Router::getUrl('user', 'store');
+        $this->data['url_cancel'] = Router::getUrl('auth','index');
         $view->adminRender($page, $this->data);
     }
 }
