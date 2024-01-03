@@ -1,4 +1,21 @@
 .logo {
-    width: 150px;
+    width: 400px;
 }
 @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css');
+
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+
+}
+.w3-container{
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.main{
+    flex: 1 1 auto;
+}
+
