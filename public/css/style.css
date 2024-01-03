@@ -17,5 +17,16 @@ body {
 }
 .main{
     flex: 1 1 auto;
+    height: calc(100% + 85px);
 }
-
+.footer{
+    min-height: 85px !important;
+    bottom: 0;
+    position: fixed;
+    width: 100vw;
+}
+.main img{
+    display: block;
+    width: 500px;
+    height: 800px;
+}

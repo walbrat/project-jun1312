@@ -23,7 +23,7 @@ class User extends BaseModel
      * @param int $id
      * @return array|false|null
      */
-    public function getUserById(int $id) : array|false|null
+    public function getUserById(int $id)
     {
         $sql = "select * from users where id = '$id' ;";
         $query = $this->db->query($sql);
@@ -34,7 +34,7 @@ class User extends BaseModel
      * @param string $login
      * @return array|false|null
      */
-    public function getUserByLogin(string $login) : array|false|null
+    public function getUserByLogin(string $login)
     {
         $sql = "select * from users where login = '$login' ;";
         $query = $this->db->query($sql);
@@ -45,7 +45,7 @@ class User extends BaseModel
      * @param string $email
      * @return array|false|null
      */
-    public function getUserByEmail(string $email) : array|false|null
+    public function getUserByEmail(string $email)
     {
         $sql = "select * from users where email = '$email' ;";
         $query = $this->db->query($sql);
