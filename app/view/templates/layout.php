@@ -7,7 +7,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <link rel="stylesheet" href="/public/css/style.css">
+        <link rel="stylesheet" href="/css/style.css">
         <title><?php echo SITE_NAME; ?></title>
     </head>
     <body>
@@ -17,8 +17,13 @@
             <?php include_once PAGES_FOLDER . 'includes\header.php'; ?>
             <h1><?=  $title; ?></h1>
         </header>
-        <?php include_once PAGES_FOLDER . $page . '.php'; ?>
-        <?php include_once PAGES_FOLDER . 'includes\footer.php'; ?>
+        <div class="main">
+            <?php include_once PAGES_FOLDER . $page . '.php'; ?>
+        </div>
+        <div class="footer">
+            <?php include_once PAGES_FOLDER . 'includes\footer.php'; ?>
+        </div>
+
     </div>
     </body>
 </html>
