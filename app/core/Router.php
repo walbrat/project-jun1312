@@ -12,6 +12,7 @@ class Router
     const DEFAULT_AUTH_CONTROLLER = 'Auth';
 
     /**
+     * створює обєєкт на основі відповідного контролера та запускає виконання відповідного методу
      * @return void
      */
     static public function init(): void
@@ -31,6 +32,7 @@ class Router
     }
 
     /**
+     * отримує імєя контролера та назву action з URI
      * @return array
      */
     static public function getUri() :array
@@ -79,6 +81,7 @@ class Router
     }
 
     /**
+     * відображає помилку 404, якщо сторінка не знайдена
      * send status 404
      */
     static public function notFound(): void
@@ -113,6 +116,7 @@ class Router
     }
 
     /**
+     * перенаправляє на переданий url
      * @param string|null $url
      * @return void
      */
@@ -124,9 +128,12 @@ class Router
        header("Location: {$url}");
         exit();
     }
-
+    
     /**
+     * перевіряє чи є передане значення словом dashboard
+     * @param string $data
      * @return bool
+     *
      */
     static public function isAdminDashboard(string $data) : bool
     {

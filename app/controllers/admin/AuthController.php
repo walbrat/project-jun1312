@@ -23,6 +23,7 @@ class AuthController extends BaseController
         $this->model = new User();
     }
     /**
+     * render index page or form login
      * @return void
      */
     public function index(): void
